@@ -31,5 +31,20 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getRecipesByCurrentUser());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<RecipeResponse> updateRecipe(
+            @PathVariable Long id,
+            @RequestBody RecipeRequest request
+    ) {
+        return ResponseEntity.ok(recipeService.updateRecipe(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
+        recipeService.deleteRecipe(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }

@@ -71,4 +71,45 @@ public class RecipeService {
 
     }
 
+    public RecipeResponse updateRecipe(Long id, RecipeRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow();
+
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rezept nicht gefunden"));
+
+        // Sicherheitsprüfung: darf nur der Ersteller bearbeiten
+        if (!recipe.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Kein Zugriff auf dieses Rezept");
+        }
+
+        // Aktualisieren
+        recipe.setTitle(request.getTitle());
+        recipe.setInstructions(request.getInstructions());
+
+        Recipe updated = recipeRepository.save(recipe);
+
+        return RecipeResponse.builder()
+                .id(updated.getId())
+                .title(updated.getTitle())
+                .instructions(updated.getInstructions())
+                .createdBy(updated.getUser().getEmail())
+                .build();
+    }
+
+    public void deleteRecipe(Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow();
+
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rezept nicht gefunden"));
+
+        if (!recipe.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Kein Zugriff auf dieses Rezept");
+        }
+
+        recipeRepository.delete(recipe);
+    }
+
+
 }
