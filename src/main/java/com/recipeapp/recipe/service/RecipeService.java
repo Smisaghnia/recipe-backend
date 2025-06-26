@@ -24,8 +24,8 @@ public class RecipeService {
     public RecipeResponse createRecipe(RecipeRequest request) {
         // Authentifizierten Benutzer ermitteln
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
-
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         Recipe recipe = Recipe.builder()
                 .title(request.getTitle())
                 .instructions(request.getInstructions())
@@ -111,5 +111,17 @@ public class RecipeService {
         recipeRepository.delete(recipe);
     }
 
+    public List<RecipeResponse> searchRecipesByTitle(String title) {
+        List<Recipe> recipes = recipeRepository.findByTitleContainingIgnoreCase(title);
+
+        return recipes.stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .title(recipe.getTitle())
+                        .instructions(recipe.getInstructions())
+                        .createdBy(recipe.getUser().getUsername())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
 }

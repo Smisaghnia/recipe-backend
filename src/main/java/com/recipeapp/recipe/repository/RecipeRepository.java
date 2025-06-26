@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findAllByUserId(Long userId);
+    List<Recipe> findByTitleContainingIgnoreCase(String title);
+
 
 }

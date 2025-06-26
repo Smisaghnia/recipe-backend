@@ -5,6 +5,7 @@ import com.recipeapp.recipe.dto.RecipeResponse;
 import com.recipeapp.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +18,9 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     @PostMapping
-    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody RecipeRequest request) {
+    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody RecipeRequest request, Authentication authentication) {
+        System.out.println("Current user: " + (authentication != null ? authentication.getName() : "null"));
+        System.out.println("Authorities: " + (authentication != null ? authentication.getAuthorities() : "null"));
         return ResponseEntity.ok(recipeService.createRecipe(request));
     }
 
@@ -29,6 +32,10 @@ public class RecipeController {
     @GetMapping("/my-recipes")
     public ResponseEntity<List<RecipeResponse>> getMyRecipes() {
         return ResponseEntity.ok(recipeService.getRecipesByCurrentUser());
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<RecipeResponse>> searchRecipesByTitle(@RequestParam String title) {
+        return ResponseEntity.ok(recipeService.searchRecipesByTitle(title));
     }
 
     @PutMapping("/{id}")
@@ -44,7 +51,4 @@ public class RecipeController {
         recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
 }
