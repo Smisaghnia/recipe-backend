@@ -24,4 +24,9 @@ public class Recipe {
     @JoinColumn(name = "user_id" , nullable = false)
     private User user; // Wer das Rezept erstellt hat
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+
 }

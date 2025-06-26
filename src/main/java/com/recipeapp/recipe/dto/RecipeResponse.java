@@ -10,4 +10,5 @@ public class RecipeResponse {
     private String title;
     private String instructions;
     private String createdBy;
+    private String categoryName;
 }

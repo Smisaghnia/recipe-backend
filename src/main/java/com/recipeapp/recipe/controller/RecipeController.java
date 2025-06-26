@@ -6,6 +6,7 @@ import com.recipeapp.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +19,14 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     @PostMapping
-    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody RecipeRequest request, Authentication authentication) {
-        System.out.println("Current user: " + (authentication != null ? authentication.getName() : "null"));
-        System.out.println("Authorities: " + (authentication != null ? authentication.getAuthorities() : "null"));
-        return ResponseEntity.ok(recipeService.createRecipe(request));
+    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody RecipeRequest request) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        RecipeResponse response = recipeService.createRecipe(request, userEmail);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/by-category-name")
+    public ResponseEntity<List<RecipeResponse>> getRecipesByCategoryName(@RequestParam String categoryName) {
+        return ResponseEntity.ok(recipeService.getRecipesByCategoryName(categoryName));
     }
 
     @GetMapping
