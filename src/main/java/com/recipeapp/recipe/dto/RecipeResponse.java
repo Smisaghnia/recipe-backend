@@ -3,6 +3,8 @@ package com.recipeapp.recipe.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 @Builder
 public class RecipeResponse {
@@ -10,5 +12,5 @@ public class RecipeResponse {
     private String title;
     private String instructions;
     private String createdBy;
-    private String categoryName;
+    private Set<String> categoryNames;
 }

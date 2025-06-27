@@ -28,6 +28,11 @@ public class RecipeController {
     public ResponseEntity<List<RecipeResponse>> getRecipesByCategoryName(@RequestParam String categoryName) {
         return ResponseEntity.ok(recipeService.getRecipesByCategoryName(categoryName));
     }
+    @GetMapping("/by-category-names")
+    public ResponseEntity<List<RecipeResponse>> getRecipesByCategoryNames(
+            @RequestParam List<String> categoryNames) {
+        return ResponseEntity.ok(recipeService.getRecipesByCategoryNames(categoryNames));
+    }
 
     @GetMapping
     public ResponseEntity<List<RecipeResponse>> getAllRecipes() {
