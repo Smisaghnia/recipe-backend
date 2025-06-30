@@ -35,5 +35,9 @@ public class Recipe {
     )
     private Set<Category> categories = new HashSet<>();
 
+    @ManyToMany(mappedBy = "favoriteRecipes")
+    private Set<User> usersWhoFavorited = new HashSet<>();
+
+
 
 }

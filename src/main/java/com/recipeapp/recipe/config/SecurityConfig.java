@@ -38,8 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/recipes").permitAll()
-
-                        //.requestMatchers(HttpMethod.POST, "/api/recipes").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/favorites/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/recipes").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
